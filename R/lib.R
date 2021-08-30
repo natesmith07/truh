@@ -67,6 +67,7 @@ nearest<-function(y,U,n,d){
 #' @param B number of bootstrap samples.
 #' @param fc fold change constant. The default value is 1. See equation (2.8) of the referenced paper for more details.
 #' @param ncores the number of computing cores available. The default value is 2.
+#' @param seed random seed for replicability. The default value is 1.
 #'
 #' @return
 #' \enumerate{
@@ -98,7 +99,7 @@ nearest<-function(y,U,n,d){
 #'
 #' @export
 
-truh<-function(V,U,B,fc=1,ncores=2){
+truh<-function(V,U,B,fc=1,ncores=2,seed=1){
 
   n.u<-dim(U)[1]
   n.v<-dim(V)[1]
@@ -117,7 +118,7 @@ truh<-function(V,U,B,fc=1,ncores=2){
   registerDoParallel(cl)
 
   X<-U
-  set.seed(1)
+  set.seed(seed)
   k.hat<-prediction.strength(X, Gmin=2, Gmax=10,cutoff = 0.8)$optimalk
   clust.X <-clara(X,k=k.hat,metric="euclidean",samples=50,sampsize=500)$clustering
   mu<-table(clust.X)
